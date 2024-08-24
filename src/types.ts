@@ -1,7 +1,18 @@
 export interface SpinInfo {
-    seed: number;
+    combo: Symbol[];
+    reward: number;
 };
 
-export enum SpinResults {
+export interface Config {
+    reels: number;
+}
 
-};
+export interface Symbol {
+    name: string;
+    value: number;
+}
+
+export interface SlotConfig {
+    cfg: Config;
+    symbols: Symbol[];
+}

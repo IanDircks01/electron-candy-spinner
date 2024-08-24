@@ -1,0 +1,11 @@
+{
+    "cfg": {
+        "reels": 3
+    },
+    "symbols": [
+        {
+            "name": "test",
+            "value": 1
+        }
+    ]
+}

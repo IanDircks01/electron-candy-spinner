@@ -1,3 +1,5 @@
 Esc = Close application;
 R = Restart application;
+1 = Button 1;
+2 = Button 2;
 S = Spin;
