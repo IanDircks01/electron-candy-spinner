@@ -16,3 +16,8 @@ export interface SlotConfig {
     cfg: Config;
     symbols: Symbol[];
 }
+
+export interface SlotInit {
+    symbols: Symbol[];
+    reelCount: number;
+}

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, dialog } from 'electron';
+import { app, BrowserWindow, globalShortcut, dialog, ipcMain } from 'electron';
 import { SlotConfig, SpinInfo, Symbol } from './types';
 import fs from 'fs';
 import path from 'path';
@@ -52,7 +52,26 @@ const createWindow = (): void => {
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  mainWindow.webContents.send('init', configData.symbols);
+  ipcMain.on('ready', (event) => {
+    mainWindow.webContents.send('init', {symbols: configData.symbols, reelCount: configData.cfg.reels});
+    mainWindow.webContents.send('spin-info', {
+      combo: [
+        {
+          "name": "🍎",
+          "value": 1
+      },
+      {
+          "name": "🍎",
+          "value": 1
+      },
+      {
+          "name": "🍎",
+          "value": 1
+      }
+      ],
+      reward: 3
+    });
+  });  
 
   // Open the DevTools.
   if (DEV_MODE) mainWindow.webContents.openDevTools();
@@ -69,8 +88,32 @@ const generateSpin = (): SpinInfo => {
     resComb.push(configData.symbols[Math.floor(Math.random() * symbolCount)]);
   }
 
-  resComb.forEach((comb, index) => {
-    score += comb.value;
+  configData.symbols.some((sym) => {
+    const matches = resComb.filter((c) => c.name == sym.name);
+
+    if (matches.length == 3) {
+      resComb.forEach((c) => {
+        score += c.value;
+      });
+
+      return true;
+    } else if (matches.length == 2) {
+      const wildMatch = resComb.filter((c) => c.name == "Wild");
+
+      if (wildMatch.length != 0) {
+        resComb.forEach((c) => {
+          score += c.value;
+        });
+      } else {
+        matches.forEach((c) => {
+          score += c.value;
+        });
+      }
+
+      return true;
+    } else {
+      return false;
+    }
   });
 
   return {
