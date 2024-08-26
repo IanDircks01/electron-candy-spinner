@@ -20,7 +20,7 @@ jobs:
       - name: package application
         shell: bash
         run: |
-             tar cvzf appBuild.tar.gz out/
+             cd out;tar cvzf appBuild.tar.gz electron-candy-spinner-linux-x64/
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -39,6 +39,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./appBuild.tar.gz
+          asset_path: ./out/appBuild.tar.gz
           asset_name: appBuild.tar.gz
           asset_content_type: application/gzip
