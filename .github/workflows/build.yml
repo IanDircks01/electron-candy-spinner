@@ -14,6 +14,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 21
+          cache: 'npm'
 
       - name: Build/release Electron app
         uses: paneron/action-electron-builder@v1.8.1
