@@ -1,7 +1,11 @@
 {
+  "build": {
+    "appId": "com.candyslots.app",
+    "productName": "Candy Slots"
+  },
   "name": "electron-candy-spinner",
   "productName": "electron-candy-spinner",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
@@ -43,6 +47,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "electron-builder": "^24.13.3",
     "electron-squirrel-startup": "^1.0.1"
   }
 }
