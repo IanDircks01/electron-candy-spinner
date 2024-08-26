@@ -16,14 +16,29 @@ jobs:
         with:
           node-version: 21
           cache: 'npm'
-      - uses: paneron/action-electron-builder@v1.8.1
+      - run: npm i;npm run package
+      - name: package application
+        shell: bash
+        run: |
+             tar cvzf appBuild.tar.gz out/
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          package_manager: NPM
-          args: "--linux"
+          tag_name: tag-${{ github.run_id }}-${{ github.run_attempt }}
+          release-name: release-${{ github.run_id }}-${{ github.run_attempt }}
+          body: "Application build compressed"
+          draft: false
+          prerelease: false
+      - name: Upload release asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./appBuild.tar.gz
+          asset_name: appBuild.tar.gz
+          asset_content_type: application/gzip
